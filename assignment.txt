@@ -1,0 +1,971 @@
+Group users by role and calculate the average salary for each role.
+[
+  {
+    $group: {
+      _id: "$role",
+      avgSal : {$avg : "$salary"}
+    }
+  },
+  {
+    $project: {
+      avgSal : 1
+    }
+  }
+]
+
+Group users by city and find the total number of users in each city.
+[
+  {
+    $group: {
+      _id: "$city",
+      countnoofusers : {$sum : 1}
+    }
+  },
+  
+]
+Group users by gender and determine the average age for each gender.
+[
+  {
+    $group: {
+      _id: "$gender",
+      countnoofusers : {$avg : "$age"}
+    }
+  },
+  
+]
+Group users by role and city, and calculate the total salary for each subgroup.
+[
+  {
+    $group: {
+      _id: {
+        role : "$role",
+        city : "$city"
+      },
+      totalSal : {$sum : "$salary"}
+    }
+  },
+  {
+    $project: {
+     
+      totalSal :1
+    }
+  }
+  
+]
+Group users by gender and city, and find the maximum salary in each subgroup.
+[
+  {
+    $group: {
+      _id: {
+        role : "$gender",
+        city : "$city"
+      },
+      count : {$sum : 1},
+      maxSal : {$max : "$salary"}
+    }
+  },
+  {
+    $project: {
+      count :1,
+      maxSal :1
+    }
+  }
+  
+]
+Group users by skills and count how many users have each skill.
+[
+  {
+    $unwind: "$skills"
+  
+  },
+  {
+    $group: {
+      _id: "$skills",
+      count : {$sum :1}
+      
+    }
+  }
+]
+ Group users by role and find the minimum age for each role.
+[
+  
+  {
+    $group: {
+      _id: "$role",
+      minAge : {$min : "$age"}
+      
+    }
+  }
+]
+Group users by city and gender, and calculate the average salary for each subgroup.
+[
+  
+  {
+    $group: {
+      _id: {
+        role : "$city",
+        gender : "$gender"
+        
+      },
+      avgSal : {$avg : "$salary"}
+      
+    }
+  }
+]
+Group users by role and determine the total number of unique cities for each role.
+[
+  
+  {
+    $group: {
+      _id: "$role",
+      cities : {$addToSet : "$city"},
+    }
+  },
+  {
+    $project: {
+      total : {$size : "$cities"}
+    }
+  }
+]
+ Group users by age and count the number of users in each age group.
+[
+  
+  {
+    $group: {
+      _id: "$age",
+      count  :{$sum :1}
+    }
+  }
+]
+Group users by city and calculate the average number of skills per user in each city
+[
+  
+  {
+    $group: {
+      _id: "$city",
+      avgskills : {$avg : {$size : "$skills"}}
+    }
+  }
+]
+
+Group users by role and find the highest salary in each role.
+[
+  {
+    $group: {
+      _id: "$role",
+      maxSal : {$max : "$salary"}
+      
+    }
+  }
+]
+
+Group users by gender and calculate the total number of users for each gender.
+[
+  {
+    $group: {
+      _id: "$gender",
+     totalusers : {$sum : 1}
+      
+    }
+  }
+]
+Group users by city and determine the average age for users in each city.
+[
+  {
+    $group: {
+      _id: "$city",
+     avgusers : {$avg : "$age"}
+      
+    }
+  }
+]
+Group users by role and gender, and calculate the average salary for each subgroup.
+[
+  {
+    $group: {
+      _id: {
+        role : "$role",
+        gender : "$gender"
+      },
+      avgSal : {$avg : "$salary"}
+    }
+  }
+]
+ Group users by skills and determine the total number of users for each skill.
+[
+  {
+    $unwind : "$skills"
+  },
+  {
+    $group: {
+       _id : "$skills",
+       totalusers : {$sum : 1}
+    }
+  }
+]
+Group users by age and find the maximum salary for each age group.
+[
+  
+  {
+    $group: {
+       _id : "$age",
+       maxSal : {$max : "$salary"}
+    }
+  }
+]
+Group users by role and calculate the total number of users with more than three skills.
+[
+  
+  {
+    $addFields: {
+      numskills:{$size : "$skills"},
+    }
+  },
+  {
+    $match: {
+      numskills : {$gte : 3}
+    }
+  },
+  {
+
+    $group: {
+      _id: "$role",
+      count : {$sum :1}
+    }
+  }
+]
+Group users by gender and city, and find the average number of skills per user in each subgroup.
+[
+  
+  {
+    $group: {
+      _id: {
+        gender : "$gender",
+        city : "$city"
+      },
+      avgskills : {$avg : {$size : "$skills"}}
+    }
+  }
+]
+Group users by role and determine the highest and lowest salaries for each role
+[
+  
+  {
+    $group: {
+      _id: "$role",
+      maxSal : {$max : "$salary"},
+      minSal : {$min : "$salary"}
+    }
+  }
+]
+Group users by city and find the average number of users per role in each city.
+[
+  {
+    $group: {
+      _id:{
+        role : "$role",
+        city : "$city"
+        },
+      total : {$sum :1}
+    }
+  },
+  {
+   $project: {
+     total : 1,
+     avgusers : {$avg : "$total"}
+   }
+  }
+]
+
+Group users by role and gender, and calculate the total salary for each subgroup.
+[
+  
+  {
+    $group: {
+      _id: {
+        role : "$role",
+        gender : "$gender"
+      },
+      total : {$sum : "$salary"}
+    }
+  }
+]
+Group users by age and determine the total number of users with a salary above 1,000,000.
+[
+  {
+    $match: {
+      salary : {$gt : 100000}
+    }
+  },
+  {
+    $group: {
+      _id: "$age",
+      count : {$sum:1}
+    }
+  }
+]
+Group users by skills and find the average salary for users with each skill.
+[
+  {
+    $unwind : "$skills"
+  },
+  
+  {
+    $group: {
+      _id: "$skills",
+      avgsal : {$avg : "$salary"}
+    }
+  }
+]
+Group users by role and city, and find the average age for each subgroup.
+[
+  
+  
+  {
+    $group: {
+      _id: {
+        role : "$role",
+        city : "$city",
+        avgage : {$avg : "$age"}
+      }
+    }
+  }
+]
+Group users by gender and calculate the total number of users with Java as a skill.
+[
+  
+  
+  {
+    $match: {
+      skills : "Java"
+    }
+  },
+  {
+    $group: {
+      _id: "$gender",
+      count : {$sum :1}
+    }
+  }
+]
+Group users by city and determine the maximum number of skills any user in each city possesses.
+[
+  
+  {
+    $addFields: {
+      numskills: {$size : "$skills"}
+    }
+  },
+  {
+    $group: {
+      _id: "$city",
+      maxskills : {$max : "$numskills"}
+    }
+  }
+]
+Group users by role and calculate the total number of users for each role with Python as a skill.
+[
+  
+  {
+    $match: {
+      skills : "Python"
+    }
+  },
+  {
+    $group: {
+      _id: "$role",
+      count : {$sum :1}
+    }
+  }
+]
+Group users by gender and city, and find the average salary for users in each subgroup with more than two skills.
+[
+  {
+    $addFields: {
+      numskills: {$size : "$skills"}
+    }
+  },
+  {
+    $match: {
+      numskills : {$gt : 2}
+    }
+  },
+  {
+    $group: {
+      _id: {
+        gender  :"$gender",
+        city : "$city"
+      },
+      avgsal : {$avg : "$salary"}
+    }
+  }
+]
+Group users by age and determine the average number of skills per user in each age group.
+[
+  {
+    $addFields: {
+      numskills: {$size : "$skills"}
+    }
+  },
+  {
+    $group: {
+      _id: "$age",
+      avgskills : {$avg :"$numskills"}
+    }
+  }
+]
+Group users by role and find the total salary of users who have "customer" as their role and live in Mumbai.
+[
+  {
+    $match: {
+      role : "customer",
+      city : "Mumbai"
+    }
+  },
+  
+  {
+    $group: {
+      _id: "$role",
+      salary : {$sum : "$salary"}
+    }
+  },
+  
+]
+Group users by city and find the maximum salary in each city for users with "admin" role.
+[
+  {
+    $match: {
+      role : "admin",
+    }
+  },
+  
+  {
+    $group: {
+      _id: "$city",
+      salary : {$max : "$salary"}
+    }
+  },
+  
+]
+Group users by gender and calculate the total number of users with salary above 500,000.
+[
+  {
+    $match: {
+      salary : {$gt : 500000},
+    }
+  },
+  
+  {
+    $group: {
+      _id: "$gender",
+      total : {$sum : 1}
+    }
+  },
+  
+]
+Group users by skills and determine the average age for users with each skill.
+[
+  {
+    $unwind : "$skills"
+  },
+  
+  
+  {
+    $group: {
+      _id: "$skills",
+      avgage : {$avg : "$age"}
+    }
+  },
+  
+]
+Group users by role and find the average number of skills for users with salary below 700,000.
+[
+  {
+    $addFields: {
+      numskills: {$size : "$skills"}
+    }
+  },
+  
+  {
+    $match: {
+      salary : {$lt : 700000}
+    }
+  },
+  
+  
+  {
+    $group: {
+      _id: "$role",
+      avgskills : {$avg : "$numskills"}
+    }
+  },
+  
+]
+Group users by city and gender, and calculate the average salary for each subgroup with "Python" skill.
+[
+  
+  
+  {
+    $match: {
+      skills : "Python",
+    }
+  },
+  
+  
+  {
+    $group: {
+      _id: {
+        city : "$city",
+        gender : "$gender"
+      },
+      avgsalary : {$avg : "$salary"}
+    }
+  },
+  
+]
+ Group users by age and determine the total number of users with the role "admin" in each age group.
+[
+  
+  
+  {
+    $match: {
+      role : "admin",
+    }
+  },
+  
+  
+  {
+    $group: {
+      _id: "$age",
+     total  :{$sum :1}
+    }
+  },
+  
+]
+Group users by role and city, and find the total number of users with "C++" as a skill in each subgroup.
+[
+  
+  
+  {
+    $match: {
+      skills : "C++",
+    }
+  },
+  
+  
+  {
+    $group: {
+      _id: {
+        role : "$role",
+        city : "$city"
+      },
+     total  :{$sum :1}
+    }
+  },
+  
+]
+
+Group users by gender and calculate the total number of users with salary above the average salary of all users.
+[
+  {
+    $group: {
+      _id:0,
+      avgsal : {$avg : "$salary"},
+      users : {$push : {salary : "salary"}}
+    }
+  },
+  {
+    $unwind: "$users"
+  },
+  {
+    $project: {
+      _id : 1,
+      avgsal : 1,
+      gender : "$_id",
+      salary : "$users.salary",
+      above : {$gt : ["$users.salary","$average"]}
+    }
+  },
+  {
+    $match: {
+      above : true
+    }
+  },
+  {
+    $group: {
+       _id: "gender",
+     count : {$sum :1}
+    }
+  }
+  
+]
+
+Group users by skills and determine the maximum age of users with each skill.
+[
+  {
+    $unwind : "$skills"
+  },
+  {
+    $group: {
+      _id: "$skills",
+      total : {$sum :1},
+      maxage : {$max : "$age"}
+    }
+  }
+]
+Group users by role and city, and calculate the total number of users with more than one skill.
+[
+  {
+    $addFields: {
+      noofskills : {$size : "$skills"}
+    }
+  },
+  {
+    $match: {
+      skills : {$gt : "$noofskills"}
+    }
+  },
+  {
+    $group: {
+      _id: {
+        role : "$role",
+        city : "$city"
+      },
+      total : {$sum :1},
+      
+    }
+  }
+]
+Group users by gender and city, and determine the total number of users with a salary less than 500,000 in each subgroup.
+[
+  {
+    $match: {
+      salary : {$lt : 500000}
+    }
+  },
+  {
+    $group: {
+      _id:{
+        gender : "$gender",
+        city : "$city"
+      },
+      total : {$sum :1}
+    }
+  }
+]
+Group users by age and find the average salary of users who have "customer" role in each age group.
+[
+  {
+    $match: {
+      role : "customer"
+    }
+  },
+  {
+    $group: {
+      _id: "$age",
+      avgsal : {$avg : "$salary"}
+    }
+  }
+]
+ Group users by role and determine the average salary for users with "Kotlin" as a skill.
+[
+  {
+    $unwind : "$skills"
+  },
+  {
+    $match: {
+      skills : "Kotlin"
+    }
+  },
+  {
+    $group: {
+      _id: "$role",
+      avgsal : {$avg  :"$salary"}
+    }
+  }
+]
+Group users by city and calculate the total number of users with "admin" role in each city.
+[
+  
+  {
+    $match: {
+     role : "admin"
+    }
+  },
+  {
+    $group: {
+      _id: "$city",
+      total : {$sum :1}
+    }
+  }
+]
+Group users by gender and determine the total number of users with "Java" and "Python" both as skills.
+[
+  
+  
+  {
+    $match: {
+      skills : {$all : ["Java" , "Python"]}
+      }
+  },
+  {
+    $group: {
+      _id: "$gender",
+      total : {$sum :1}
+    }
+  }
+]
+ Group users by age and find the total number of users with the role "customer" in each age group.
+[
+  
+  
+  {
+    $match: {
+      role : "customer"
+      }
+  },
+  {
+    $group: {
+      _id: "$age",
+      total : {$sum :1}
+    }
+  }
+]
+Group users by role and city, and calculate the total number of users with "DBMS" as a skill in each subgroup.
+[
+  
+  {
+    $unwind : "$skills"
+  },
+  {
+    $match: {
+      skills : "DBMS"
+      }
+  },
+  {
+    $group: {
+      _id: {
+        role : "$role",
+        city : "$city"
+      },
+      total : {$sum :1}
+    }
+  }
+]
+Group users by gender and determine the total number of users with more than three skills in each gender.
+[
+  
+  {
+    $addFields: {
+      noofskills: {$size : "$skills"}
+    }
+  },
+  {
+    $match: {
+      noofskills : {$gt : 3}
+    }
+  },
+  {
+    $group: {
+      _id: "$gender",
+      total : {$sum : 1}
+    }
+  }
+  
+]
+Group users by city and find the average number of skills for users in each city with salary above 1,000,000.
+[
+  {
+    $match: {
+      salary : {$gt : 1000000}
+    }
+  },
+  {
+    $addFields: {
+      noofskills: {$size: "$skills"}
+    }
+  },
+  {
+    $group: {
+      _id: "$city",
+      avgskills : {$avg : "$noofskills"}
+        
+      }
+  }
+]
+Group users by age and determine the maximum salary for users with "admin" role in each age group.
+[
+  {
+    $match: {
+      role : "admin"
+    }
+  },
+  
+  {
+    $group: {
+      _id: "$age",
+      
+        maxsal : {$max : "$salary"}
+      }
+  }
+]
+Group users by role and city, and find the total salary of users with "JavaScript" as a skill in each subgroup.
+[
+  {
+    $unwind : "$skills"
+  },
+  {
+    $match: {
+      skills : "JavaScript"
+    }
+  },
+  {
+    $group: {
+      _id: {
+        role : "$role",
+        city : "$city"
+      },
+      avgsal : {$avg : "$salary"}
+    }
+  }
+]
+Group users by gender and determine the average salary for users with the role "customer" in each gender.
+[
+  
+  {
+    $match: {
+      role : "customer"
+    }
+  },
+  {
+    $group: {
+      _id: "$gender",
+      avgsal : {$avg : "$salary"}
+    }
+  }
+]
+Group users by city and calculate the total number of users with "React" as a skill in each city.
+[
+  {
+    $unwind : "$skills"
+  },
+  
+  {
+    $match: {
+      skills : "React"
+    }
+  },
+  {
+    $group: {
+      _id: "$city",
+      total : {$sum :1}
+    }
+  }
+]
+Group users by age and determine the average salary for users with "SQL" as a skill in each age group.
+[
+  {
+    $unwind : "$skills"
+  },
+  
+  {
+    $match: {
+      skills : "SQL"
+    }
+  },
+  {
+    $group: {
+      _id: "$age",
+     avgsal :{$avg : "$salary"}
+    }
+  }
+]
+Group users by role and find the total number of users with "Django" as a skill in each role.
+[
+  {
+    $unwind : "$skills"
+  },
+  
+  {
+    $match: {
+      skills : "Django"
+    }
+  },
+  {
+    $group: {
+      _id: "$role",
+     total  : {$sum :1}
+    }
+  }
+]
+Group users by gender and determine the maximum number of skills any user in each gender possesses.
+[
+  {
+    $addFields: {
+      size: {$size : "$skills"}
+    }
+  },
+  
+  
+  {
+    $group: {
+      _id: "$gender",
+      max : {$max : "$size"}
+    }
+  }
+]
+Group users by city and calculate the total number of users with "Node.js" as a skill in each city.
+[
+  {
+    $unwind: "$skills"
+  },
+  
+  {
+    $match: {
+      skills : "Node.js"
+    }
+  },
+  {
+    $group: {
+      _id: "$city",
+     total : {$sum :1},
+    }
+  }
+]
+Group users by age and find the total number of users with "HTML" and "CSS" both as skills in each age group.
+[
+  
+  
+  {
+    $match: {
+      skills : {$all :["HTML","CSS"]}
+    }
+  },
+  {
+    $group: {
+      _id: "$age",
+     total : {$sum :1},
+    }
+  }
+]
+Group users by role and gender, and determine the average number of skills for each subgroup with salary above 1,000,000.
+[
+  {
+    $addFields: {
+      noofskills: {$size : "$skills"}
+    }
+  },
+  {
+    $match: {
+      salary : {$gt : 1000000}
+    }
+  },
+  {
+    $group: {
+      _id: {
+        role : "$role",
+        gender : "$gender"
+      },
+      avgskills : {$avg :"$noofskills"}
+  }
+  }
+]
